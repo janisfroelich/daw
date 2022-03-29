@@ -4,7 +4,42 @@ import matplotlib.pyplot as plt
 import datetime
 import seaborn as sns
 
-def data_pipeline(url: str):
+
+def data_pipeline_api(startdate : str, enddate: str, magnitude= -1):
+    startdate, enddate = check_date_valid(startdate, enddate)
+    magnitude = check_magnitude_valid(magnitude)
+    df = gpd.read_file(f"https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime={startdate}&endtime={enddate}&minmagnitude={magnitude}")
+    df_reshaped = reshape_data(df)
+    check_data(df_reshaped)
+    box_plot(df_reshaped, "mag", "Boxplot of the magnitude")
+    dist_plot(df_reshaped, "mag", "Magnitude", "Distribution of the magnitude")
+    box_plot(df_reshaped, "depth", "Boxplot of the depth")
+    dist_plot(df_reshaped, "depth", "Depth", "Distribution of the depth")
+    plot_world(df_reshaped)
+
+def check_magnitude_valid(magnitude: float):
+    """
+    Checks if the magnitude is between -1 and 10.
+    """
+    if magnitude < -1 or magnitude > 10:
+        magnitude = input("Please enter a valid magnitude (between -1 and 10)")
+    return magnitude
+
+def check_date_valid(startdate: str, enddate: str):
+    """
+    Checks if the startdate is before the enddate.
+    """
+    if "-" not in startdate or "-" not in enddate:
+        startdate = input("Please enter a valid startdate in the format yyyy-mm-dd")
+        enddate = input("Please enter a valid enddate in the format yyyy-mm-dd")
+    if "-" in startdate and "-" in enddate:
+        if len(startdate.split("-")) != 3 or len(enddate.split("-")) != 3:
+            startdate = input("Please enter a valid startdate in the format yyyy-mm-dd")
+            enddate = input("Please enter a valid enddate in the format yyyy-mm-dd")
+    return str(startdate), str(enddate)
+
+
+def data_pipeline_url(url: str):
     df = gpd.read_file(url)
     df_reshaped = reshape_data(df)
     check_data(df_reshaped)
@@ -77,7 +112,7 @@ def plot_world(df: gpd.GeoDataFrame):
     world = gpd.read_file(gpd.datasets.get_path('naturalearth_lowres'))
     axis = world.plot(figsize=(50, 50), color='white', edgecolor='black')
 
-    df.plot(ax=axis, color=df["color"], markersize=(df["mag"] * 100))
+    df.plot(ax=axis, color=df["color"], markersize=(df["mag"] * 100), alpha=0.6)
     plt.suptitle("green = mag < 1\n yellow = 3 > mag > 1 \n orange = 5 > mag > 3 \n red = mag > 5", x=1, y=0.5,
                  fontsize=50)
     return plt.show()
