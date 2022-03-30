@@ -16,6 +16,7 @@ def data_pipeline_api(startdate : str, enddate: str, magnitude= -1):
     box_plot(df_reshaped, "depth", "Boxplot of the depth")
     dist_plot(df_reshaped, "depth", "Depth", "Distribution of the depth")
     plot_world(df_reshaped)
+    return df_reshaped
 
 def check_magnitude_valid(magnitude: float):
     """
@@ -57,11 +58,21 @@ def read_geojson(url: str):
 def reshape_data(df: gpd.GeoDataFrame):
     df = df.drop(columns=["url", "detail"])
     df = df.astype({"type": "category", "alert": "category", "magType": "category", "sources": "category", "tsunami": "category"})
-    df["date"] = 0
+    df["occured_time"] = 0
+    df["recent_update"] = 0
     df["depth"] = 0
+    df["lat"] = 0
+    df["lon"] = 0
     for i in range(len(df)):
-        df["date"][i] = datetime.datetime.fromtimestamp(df["time"][i] / 1000).strftime('%d/%m/%y %H:%M:%S')
+        for i in range(len(df)):
+            df["occured_time"][i] = datetime.datetime.fromtimestamp(
+                df["time"][i] / 1000).strftime('%d/%m/%y %H:%M:%S')
+            df["recent_update"][i] = datetime.datetime.fromtimestamp(
+                df["time"][i] / 1000).strftime('%d/%m/%y %H:%M:%S')
+            df["depth"][i] = df["geometry"][i].z
         df["depth"][i] = df["geometry"][i].z
+        df["lat"][i] = df["geometry"][i].y
+        df["lon"][i] = df["geometry"][i].x
     return df
 
 def dist_plot(df: gpd.GeoDataFrame, col: str, xlabel: str, title: str):
