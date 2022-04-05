@@ -4,20 +4,21 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 
 
-def plot_overview(df, col):
-    """
-    Plots a overview of the dataframe.
-    :param df: dataframe
-    :param col: column to plot
-    :return:
-    """
-    # creating a figure composed of two matplotlib.Axes objects (ax_box and ax_hist)
-    f, (ax_box, ax_hist) = plt.subplots(2, sharex=True)
+def count_na_absolt_relativ(df: pd.DataFrame):
+    """Counts the number of missing values in a dataframe and returns a new DataFrame with the absolut and relativ value."""
+    df_absolut_relativ = pd.DataFrame(columns=["absolut", "relativ"])
+    df_absolut_relativ["absolut"] = df.isna().sum()
+    df_absolut_relativ["relativ"] = df_absolut_relativ["absolut"] / len(df)
+    return df_absolut_relativ
 
-    # assigning a graph to each ax
-    sns.boxplot(df[col], ax=ax_box)
-    sns.histplot(data=df, x=col, ax=ax_hist)
+def overview(df, col):
+    f, axs = plt.subplots(1,2, figsize=(9,6), gridspec_kw=dict(width_ratios=[15,10]))
+    sns.boxplot(df[col], ax=axs[0])
+    sns.distplot(df[col], ax=axs[1])
+    return plt.show()
 
-    # Remove x axis name for the boxplot
-    ax_box.set(xlabel='')
-    plt.show()
+def corr_overview(df: pd.DataFrame, method_corr = 'pearson'):
+    """Returns a correlation FacetGrid plot and a Dataframe with FacetGrid correlation coeffizient, select method_corr: person, spearman."""
+    sns.pairplot(df, hue="class", size=2.5)
+    df_corr = df.corr(method = method_corr)
+    return plt.show(), df_corr
