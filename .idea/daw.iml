@@ -5,5 +5,7 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="gdv" />
+    <orderEntry type="module" module-name="smartclassroom" />
+    <orderEntry type="module" module-name="ala" />
   </component>
 </module>

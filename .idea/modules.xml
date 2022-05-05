@@ -2,8 +2,10 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/../ala/.idea/ala.iml" filepath="$PROJECT_DIR$/../ala/.idea/ala.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/daw.iml" filepath="$PROJECT_DIR$/.idea/daw.iml" />
       <module fileurl="file://$PROJECT_DIR$/../gdv/.idea/gdv.iml" filepath="$PROJECT_DIR$/../gdv/.idea/gdv.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../smartclassroom/.idea/smartclassroom.iml" filepath="$PROJECT_DIR$/../smartclassroom/.idea/smartclassroom.iml" />
     </modules>
   </component>
 </project>
