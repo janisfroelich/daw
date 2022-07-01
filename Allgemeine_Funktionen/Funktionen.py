@@ -19,6 +19,6 @@ def overview(df, col):
 
 def corr_overview(df: pd.DataFrame, method_corr = 'pearson'):
     """Returns a correlation FacetGrid plot and a Dataframe with FacetGrid correlation coeffizient, select method_corr: person, spearman."""
-    sns.pairplot(df, hue="class", size=2.5)
+    sns.pairplot(df, size=2.5)
     df_corr = df.corr(method = method_corr)
     return plt.show(), df_corr
